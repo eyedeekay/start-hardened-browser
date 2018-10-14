@@ -1,0 +1,103 @@
+6c6,16
+< # Copyright 2017 The Tor Project.  See LICENSE for licensing information.
+---
+> # This file is modified from a file included in the Tor Browser Bundle.
+> #
+> # Copyright 2017 The Tor Project.  See LICENSE.tor for licensing information.
+> 
+> if [ "x$TOR_BROWSER_WM_CLASS" = "x" ]; then
+>     TOR_BROWSER_WM_CLASS="Tor Browser"
+> fi
+> 
+> if [ "x$TOR_ALT_NETWORK" = "x" ]; then
+>     TOR_ALT_NETWORK="tor"
+> fi
+8c18,22
+< complain_dialog_title="Tor Browser"
+---
+> if [ "x$TOR_BROWSER_ALT_PROFILE" = "x" ]; then
+>     TOR_BROWSER_ALT_PROFILE=TorBrowser/Data/Browser/profile.default
+> fi
+> 
+> complain_dialog_title="$TOR_BROWSER_WM_CLASS"
+18c32
+< # Second, make sure this script wasn't started as 'sh start-tor-browser' or
+---
+> # Second, make sure this script wasn't started as 'sh start-$TOR_ALT_NETWORK-browser' or
+21c35
+<     echo "$complain_dialog_title should be started as './start-tor-browser'"
+---
+>     echo "$complain_dialog_title should be started as './start-$TOR_ALT_NETWORK-browser'"
+210c224
+< 			complain "start-tor-browser cannot be run using a symlink on this operating system."
+---
+> 			complain "start-$TOR_ALT_NETWORK-browser cannot be run using a symlink on this operating system."
+236,239c250,254
+< cp start-tor-browser.desktop ../
+< sed -i -e "s,^Name=.*,Name=Tor Browser,g" ../start-tor-browser.desktop
+< sed -i -e "s,^Icon=.*,Icon=$PWD/browser/icons/mozicon128.png,g" ../start-tor-browser.desktop
+< sed -i -e "s,^Exec=.*,Exec=sh -c '\"$PWD/start-tor-browser\" --detach || ([ !  -x \"$PWD/start-tor-browser\" ] \&\& \"\$(dirname \"\$*\")\"/Browser/start-tor-browser --detach)' dummy %k,g" ../start-tor-browser.desktop
+---
+> 
+> cp start-tor-browser.desktop ../start-$TOR_ALT_NETWORK-browser.desktop
+> sed -i -e "s,^Name=.*,Name=$TOR_BROWSER_WM_CLASS,g" ../start-$TOR_ALT_NETWORK-browser.desktop
+> sed -i -e "s,^Icon=.*,Icon=$PWD/browser/icons/mozicon128.png,g" ../start-$TOR_ALT_NETWORK-browser.desktop
+> sed -i -e "s,^Exec=.*,Exec=sh -c '\"$PWD/start-$TOR_ALT_NETWORK-browser\" --detach || ([ !  -x \"$PWD/start-$TOR_ALT_NETWORK-browser\" ] \&\& \"\$(dirname \"\$*\")\"/Browser/start-$TOR_ALT_NETWORK-browser --detach)' dummy %k,g" ../start-$TOR_ALT_NETWORK-browser.desktop
+243c258
+< 	cp ../start-tor-browser.desktop "$HOME/.local/share/applications/"
+---
+> 	cp ../start-$TOR_ALT_NETWORK-browser.desktop "$HOME/.local/share/applications/"
+250,251c265,266
+< 	if [ -e "$HOME/.local/share/applications/start-tor-browser.desktop" ]; then
+< 		rm -f "$HOME/.local/share/applications/start-tor-browser.desktop"
+---
+> 	if [ -e "$HOME/.local/share/applications/start-$TOR_ALT_NETWORK-browser.desktop" ]; then
+> 		rm -f "$HOME/.local/share/applications/start-$TOR_ALT_NETWORK-browser.desktop"
+273,282c288,289
+< [% IF ! c("var/release") %]
+< export SELFRANDO_write_layout_file=
+< [% END %]
+< 
+< [% IF c("var/asan") -%]
+< # We need to disable LSan which is enabled by default now. Otherwise we'll get
+< # a crash during shutdown: https://bugs.torproject.org/10599#comment:59
+< ASAN_OPTIONS="detect_leaks=0"
+< export ASAN_OPTIONS
+< [% END -%]
+---
+> 
+> 
+345c352
+< # Either set `TOR_CONTROL_PASSWD` before running ./start-tor-browser, or put
+---
+> # Either set `TOR_CONTROL_PASSWD` before running ./start-$TOR_ALT_NETWORK-browser, or put
+361,362c368,369
+<     TOR_CONTROL_PASSWD=${TOR_CONTROL_PASSWD} ./firefox --class "Tor Browser" \
+<         -profile TorBrowser/Data/Browser/profile.default --help 2>/dev/null
+---
+>     TOR_CONTROL_PASSWD=${TOR_CONTROL_PASSWD} ./firefox --class "$TOR_BROWSER_WM_CLASS" \
+>         --profile "$TOR_BROWSER_ALT_PROFILE" --help 2>/dev/null
+365,366c372,373
+<     TOR_CONTROL_PASSWD=${TOR_CONTROL_PASSWD} ./firefox --class "Tor Browser" \
+<        -profile TorBrowser/Data/Browser/profile.default "${@}" > "$logfile" 2>&1 </dev/null &
+---
+>     TOR_CONTROL_PASSWD=${TOR_CONTROL_PASSWD} ./firefox --class "$TOR_BROWSER_WM_CLASS" \
+>        --profile "$TOR_BROWSER_ALT_PROFILE" "${@}" > "$logfile" 2>&1 </dev/null &
+369,370c376,377
+<     TOR_CONTROL_PASSWD=${TOR_CONTROL_PASSWD} ./firefox --class "Tor Browser" \
+<         -profile TorBrowser/Data/Browser/profile.default "${@}" 2>&1 </dev/null | \
+---
+>     TOR_CONTROL_PASSWD=${TOR_CONTROL_PASSWD} ./firefox --class "$TOR_BROWSER_WM_CLASS" \
+>         --profile "$TOR_BROWSER_ALT_PROFILE" "${@}" 2>&1 </dev/null | \
+373,374c380,381
+<     TOR_CONTROL_PASSWD=${TOR_CONTROL_PASSWD} ./firefox --class "Tor Browser" \
+<         -profile TorBrowser/Data/Browser/profile.default "${@}" < /dev/null
+---
+>     TOR_CONTROL_PASSWD=${TOR_CONTROL_PASSWD} ./firefox --class "$TOR_BROWSER_WM_CLASS" \
+>         --profile "$TOR_BROWSER_ALT_PROFILE" "${@}" < /dev/null
+376,377c383,384
+<     TOR_CONTROL_PASSWD=${TOR_CONTROL_PASSWD} ./firefox --class "Tor Browser" \
+<         -profile TorBrowser/Data/Browser/profile.default "${@}" > "$logfile" 2>&1 </dev/null
+---
+>     TOR_CONTROL_PASSWD=${TOR_CONTROL_PASSWD} ./firefox --class "$TOR_BROWSER_WM_CLASS" \
+>         --profile "$TOR_BROWSER_ALT_PROFILE" "${@}" > "$logfile" 2>&1 </dev/null
