@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+#
+# GNU/Linux does not really require something like RelativeLink.c
+# However, we do want to have the same look and feel with similar features.
+#
+# Copyright 2017 The Tor Project.  See LICENSE for licensing information.
+
+TOR_BROWSER_WM_CLASS="i2p Browser"
+TOR_ALT_NETWORK="i2p"
+TOR_BROWSER_ALT_PROFILE=TorBrowser/Data/Browser/profile.i2p
+
+./start-hardened-browser "${@}"
